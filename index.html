@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Dinnstore</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { margin: 0; font-family: sans-serif; background: #f7f7f7; }
+    header {
+      background-color: #1a73e8;
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .menu-icon { font-size: 26px; cursor: pointer; }
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: -280px;
+      width: 280px;
+      height: 100%;
+      background-color: #fff;
+      box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+      padding: 20px;
+      transition: right 0.3s ease;
+      z-index: 999;
+      overflow-y: auto;
+    }
+    .sidebar.open { right: 0; }
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.4);
+      display: none;
+      z-index: 998;
+    }
+    .overlay.show { display: block; }
+    .sidebar h3 { margin-top: 0; }
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      text-decoration: none;
+      color: #333;
+      border-bottom: 1px solid #eee;
+      transition: background 0.2s;
+    }
+    .sidebar a:hover { background: #f0f0f0; }
+    .sidebar a span { margin-left: 10px; }
+    .submenu { display: none; padding-left: 15px; }
+    .submenu a { border-bottom: none; }
+    main { padding: 30px; }
+    .intro {
+      background: #ffffff;
+      padding: 20px;
+      margin-bottom: 30px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+    .arrow { margin-left: auto; transition: transform 0.3s ease; }
+    .rotated { transform: rotate(90deg); }
+    .produk {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 250px;
+      padding: 15px;
+      text-align: center;
+    }
+    .card img {
+      width: 100%;
+      border-radius: 8px;
+    }
+    .card h4 { margin: 10px 0 5px; }
+    .card p {
+      margin: 0 0 10px;
+      font-size: 14px;
+      color: #555;
+    }
+    .card a {
+      background: #1a73e8;
+      color: white;
+      padding: 8px 15px;
+      text-decoration: none;
+      border-radius: 5px;
+      display: inline-block;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div><strong>Dinnstore</strong></div>
+  <div class="menu-icon" onclick="openSidebar()">&#9776;</div>
+</header>
+
+<div class="overlay" onclick="closeSidebar()" id="overlay"></div>
+
+<div class="sidebar" id="sidebar">
+  <h3>🛍️ Daftar Layanan</h3>
+  <a href="#vps">💻 <span>VPS Premium</span></a>
+  <a href="#" onclick="toggleSubmenu('sosmed')">💉 <span>Suntik Sosmed</span> <span class="arrow" id="arrow-sosmed">▶</span></a>
+  <div id="submenu-sosmed" class="submenu">
+    <a href="https://wa.me/6282314477001?text=Pesan%20Like%20TikTok%201K">🎬 TikTok</a>
+    <a href="https://wa.me/6282314477001?text=Pesan%20Follower%20Instagram%201K">📸 Instagram</a>
+    <a href="https://wa.me/6282314477001?text=Pesan%20View%20YouTube%201K">🎥 YouTube</a>
+    <a href="https://wa.me/6282314477001?text=Pesan%20Like%20Facebook">💎 Facebook</a>
+  </div>
+  <a href="#vpn">🔐 <span>Akun VPN Premium</span></a>
+  <a href="#apps">📱 <span>Aplikasi Premium</span></a>
+</div>
+
+<main>
+  <div class="intro">
+    <h2>Selamat Datang di Dinnstore 👋</h2>
+    <p>Silakan pilih layanan yang kamu butuhkan dengan klik ikon menu ☰ di kanan atas, atau scroll ke bawah untuk melihat langsung daftar produk kami!</p>
+  </div>
+
+  <section id="vps">
+    <h3>💻 VPS Premium</h3>
+    <div class="produk">
+      <div class="card">
+        <img src="https://via.placeholder.com/250x150?text=VPS+1GB" alt="VPS 1GB">
+        <h4>VPS 1GB RAM</h4>
+        <p>Cocok untuk tugas ringan, uptime stabil.</p>
+        <a href="https://wa.me/6282314477001?text=Pesan%20VPS%201GB">Pesan</a>
+      </div>
+      <div class="card">
+        <img src="https://via.placeholder.com/250x150?text=VPS+2GB" alt="VPS 2GB">
+        <h4>VPS 2GB RAM</h4>
+        <p>Kinerja lebih optimal untuk aplikasi menengah.</p>
+        <a href="https://wa.me/6282314477001?text=Pesan%20VPS%202GB">Pesan</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="vpn">
+    <h3>🔐 Akun VPN Premium</h3>
+    <div class="produk">
+      <div class="card">
+        <img src="https://via.placeholder.com/250x150?text=VPN+1+Bulan" alt="VPN 1 Bulan">
+        <h4>VPN 1 Bulan</h4>
+        <p>Kecepatan tinggi, anti blokir, stabil.</p>
+        <a href="https://wa.me/6282314477001?text=Pesan%20VPN%201%20bulan">Pesan</a>
+      </div>
+      <div class="card">
+        <img src="https://via.placeholder.com/250x150?text=VPN+3+Bulan" alt="VPN 3 Bulan">
+        <h4>VPN 3 Bulan</h4>
+        <p>Lebih hemat untuk pemakaian jangka menengah.</p>
+        <a href="https://wa.me/6282314477001?text=Pesan%20VPN%203%20bulan">Pesan</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="apps">
+    <h3>📱 Aplikasi Premium</h3>
+    <div class="produk">
+      <div class="card">
+        <img src="https://via.placeholder.com/250x150?text=YouTube+Premium" alt="YouTube Premium">
+        <h4>YouTube Premium</h4>
+        <p>Tanpa iklan, putar di latar belakang, unduhan offline.</p>
+        <a href="https://wa.me/6282314477001?text=Langganan%20YouTube%20Premium">Langganan</a>
+      </div>
+      <div class="card">
+        <img src="https://via.placeholder.com/250x150?text=Canva+Pro" alt="Canva Pro">
+        <h4>Canva Pro</h4>
+        <p>Desain bebas watermark, ribuan template premium.</p>
+        <a href="https://wa.me/6282314477001?text=Langganan%20Canva%20Pro">Langganan</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+  function openSidebar() {
+    document.getElementById('sidebar').classList.add('open');
+    document.getElementById('overlay').classList.add('show');
+  }
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('show');
+  }
+  function toggleSubmenu(id) {
+    var submenu = document.getElementById('submenu-' + id);
+    var arrow = document.getElementById('arrow-' + id);
+    const isOpen = submenu.style.display === 'block';
+    submenu.style.display = isOpen ? 'none' : 'block';
+    arrow.classList.toggle('rotated', !isOpen);
+  }
+</script>
+
+</body>
+</html>
