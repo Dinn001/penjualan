@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Toko Dinns</title>
+  <style>
+    :root {
+      --bg: #f4f6f8;
+      --text: #333;
+      --card: #fff;
+      --nav: #1e88e5;
+      --nav-dark: #1976d2;
+      --button: #1e88e5;
+      --button-hover: #1565c0;
+    }
+    body.dark {
+      --bg: #1b1b1b;
+      --text: #eee;
+      --card: #2c2c2c;
+      --nav: #121212;
+      --nav-dark: #2a2a2a;
+      --button: #2196f3;
+      --button-hover: #0d47a1;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      transition: all 0.3s;
+    }
+    header {
+      background-color: var(--nav);
+      color: white;
+      padding: 1.5em;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    nav {
+      background-color: var(--nav-dark);
+      padding: 1em;
+      text-align: center;
+    }
+    nav a {
+      color: white;
+      margin: 0 1em;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    main {
+      padding: 2em;
+      max-width: 1000px;
+      margin: auto;
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2em;
+    }
+    .product, .cart, .admin-panel, .login-panel, .riwayat-panel {
+      background: var(--card);
+      padding: 1.5em;
+      border-radius: 12px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    }
+    .product img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .product h3 { margin: 0.5em 0; }
+    .product p { margin: 0.2em 0; color: var(--text); font-weight: bold; }
+    button {
+      width: 100%;
+      padding: 0.75em;
+      background: var(--button);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1em;
+      font-weight: bold;
+      transition: background 0.3s;
+      cursor: pointer;
+    }
+    button:hover { background: var(--button-hover); }
+    input[type="text"], input[type="number"], input[type="password"] {
+      padding: 0.7em;
+      width: 100%;
+      margin-bottom: 1em;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .cart, .admin-panel, .login-panel, .riwayat-panel {
+      margin-top: 2em;
+      display: none;
+    }
+    .cart ul, .riwayat-panel ul {
+      list-style: none;
+      padding: 0;
+      margin: 1em 0;
+    }
+    .cart li, .riwayat-panel li {
+      margin-bottom: 0.5em;
+    }
+    footer {
+      text-align: center;
+      padding: 1em;
+      background: var(--nav);
+      color: white;
+      margin-top: 3em;
+    }
+    .toggle-dark {
+      position: fixed;
+      top: 1em;
+      right: 1em;
+      background: var(--button);
+      color: white;
+      border: none;
+      padding: 0.5em 1em;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .notif {
+      position: fixed;
+      bottom: 1.5em;
+      right: 1.5em;
+      background: #4caf50;
+      color: white;
+      padding: 1em 1.5em;
+      border-radius: 8px;
+      display: none;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+  <button class="toggle-dark" onclick="toggleDarkMode()">🌓 Mode</button>
+  <div class="notif" id="notif">Produk berhasil dibeli!</div>
+  <header>
+    <h1>Toko Dinns</h1>
+    <p>Tempat Belanja Produk Terbaik</p>
+  </header>
+  <nav>
+    <a href="#">Beranda</a>
+    <a href="#produk">Produk</a>
+    <a href="#keranjang">Keranjang</a>
+    <a href="#login">Login</a>
+    <a href="#riwayat">Riwayat</a>
+  </nav>
+  <main>
+    <div class="login-panel" id="login">
+      <h2>Login</h2>
+      <label>Username: <input type="text" id="login-username"></label>
+      <label>Password: <input type="password" id="login-password"></label>
+      <button onclick="loginUser()">Masuk</button>
+      <p id="login-msg" style="color:red;"></p>
+    </div>
+
+    <h2 id="produk">Produk Kami</h2>
+    <div class="product-grid" id="product-list"></div>
+
+    <div class="cart" id="keranjang">
+      <h2>Keranjang Belanja</h2>
+      <ul id="cart-items"></ul>
+      <p><strong>Total: </strong><span id="total-harga">Rp0</span></p>
+    </div>
+
+    <div class="admin-panel" id="admin">
+      <h2>Panel Admin</h2>
+      <label>Nama Produk: <input type="text" id="nama-produk"></label>
+      <label>Harga Produk: <input type="number" id="harga-produk"></label>
+      <label>URL Gambar: <input type="text" id="gambar-produk"></label>
+      <button onclick="tambahProduk()">Tambah Produk</button>
+    </div>
+
+    <div class="riwayat-panel" id="riwayat">
+      <h2>Riwayat Pembelian</h2>
+      <ul id="riwayat-list"></ul>
+    </div>
+  </main>
+  <footer>
+    <p>&copy; 2025 Toko Dinns. All rights reserved.</p>
+  </footer>
+
+  <script>
+    let produk = [
+      { nama: "Kaos Keren", harga: 99000, gambar: "https://via.placeholder.com/200x150.png?text=Kaos+Keren" },
+      { nama: "Sepatu Sport", harga: 199000, gambar: "https://via.placeholder.com/200x150.png?text=Sepatu+Sport" },
+      { nama: "Topi Trendi", harga: 49000, gambar: "https://via.placeholder.com/200x150.png?text=Topi+Trendi" },
+      { nama: "Tas Ransel", harga: 149000, gambar: "https://via.placeholder.com/200x150.png?text=Tas+Ransel" }
+    ];
+
+    let keranjang = [];
+    let riwayat = [];
+    let akun = {
+      "admin": { password: "admin123", role: "admin" },
+      "member": { password: "member123", role: "member" }
+    };
+    let roleAktif = null;
+
+    function renderProduk() {
+      const container = document.getElementById('product-list');
+      container.innerHTML = '';
+      produk.forEach((item, index) => {
+        container.innerHTML += `
+          <div class="product">
+            <img src="${item.gambar}" alt="${item.nama}">
+            <h3>${item.nama}</h3>
+            <p>Rp${item.harga.toLocaleString()}</p>
+            <button onclick="tambahKeKeranjang(${index})">Beli</button>
+          </div>
+        `;
+      });
+    }
+
+    function tambahKeKeranjang(index) {
+      keranjang.push(produk[index]);
+      riwayat.push({ nama: produk[index].nama, harga: produk[index].harga, waktu: new Date().toLocaleString() });
+      renderKeranjang();
+      renderRiwayat();
+      showNotif("Produk berhasil dibeli!");
+    }
+
+    function renderKeranjang() {
+      const list = document.getElementById('cart-items');
+      const total = document.getElementById('total-harga');
+      list.innerHTML = '';
+      let totalHarga = 0;
+      keranjang.forEach((item) => {
+        totalHarga += item.harga;
+        list.innerHTML += `<li>${item.nama} - Rp${item.harga.toLocaleString()}</li>`;
+      });
+      total.textContent = `Rp${totalHarga.toLocaleString()}`;
+    }
+
+    function renderRiwayat() {
+      const list = document.getElementById('riwayat-list');
+      list.innerHTML = '';
+      riwayat.forEach((item) => {
+        list.innerHTML += `<li>${item.nama} - Rp${item.harga.toLocaleString()} <br><small>${item.waktu}</small></li>`;
+      });
+    }
+
+    function tambahProduk() {
+      if (roleAktif !== "admin") return alert("Hanya admin yang dapat menambah produk.");
+      const nama = document.getElementById('nama-produk').value;
+      const harga = parseInt(document.getElementById('harga-produk').value);
+      const gambar = document.getElementById('gambar-produk').value;
+      if (nama && harga && gambar) {
+        produk.push({ nama, harga, gambar });
+        renderProduk();
+        alert('Produk berhasil ditambahkan!');
+      } else {
+        alert('Isi semua data produk.');
+      }
+    }
+
+    function loginUser() {
+      const user = document.getElementById('login-username').value;
+      const pass = document.getElementById('login-password').value;
+      const msg = document.getElementById('login-msg');
+
+      if (akun[user] && akun[user].password === pass) {
+        roleAktif = akun[user].role;
+        msg.style.color = "green";
+        msg.textContent = `Login berhasil sebagai ${roleAktif}`;
+        if (roleAktif === "admin") {
+          document.getElementById("admin").style.display = "block";
+        }
+        document.getElementById("keranjang").style.display = "block";
+        document.getElementById("riwayat").style.display = "block";
+        document.getElementById("login").style.display = "none";
+      } else {
+        msg.textContent = "Username atau password salah";
+      }
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark");
+    }
+
+    function showNotif(text) {
+      const notif = document.getElementById("notif");
+      notif.textContent = text;
+      notif.style.display = "block";
+      setTimeout(() => notif.style.display = "none", 2500);
+    }
+
+    window.onload = () => {
+      document.getElementById("login").style.display = "block";
+      renderProduk();
+    };
+  </script>
+</body>
+</html>
