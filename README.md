@@ -1,27 +1,35 @@
-<h1 align="center">
-  <span class="rainbow-text">DINNS STORE</span>
-</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>DINNS STORE</title>
+  <style>
+    body {
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .rainbow-text {
+      font-size: 3em;
+      font-weight: bold;
+      background-image: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet);
+      background-size: 400%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: rainbow 5s linear infinite;
+      white-space: nowrap;
+    }
 
-<style>
-@keyframes slideRainbow {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(100%); }
-}
-
-.rainbow-text {
-  display: inline-block;
-  font-weight: bold;
-  font-size: 2.5em;
-  background-image: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
-  background-size: 400%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: slideText 6s linear infinite;
-  white-space: nowrap;
-}
-
-@keyframes slideText {
-  0% { background-position: 0% }
-  100% { background-position: 400% }
-}
-</style>
+    @keyframes rainbow {
+      0% { background-position: 0%; }
+      100% { background-position: 400%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="rainbow-text">DINNS STORE</div>
+</body>
+</html>
