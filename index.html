@@ -1,0 +1,554 @@
+
+<!DOCTYPE html>
+
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dinns Store Tunneling</title>
+<style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #222;
+      padding: 1rem;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: #0ff;
+    }
+    nav {
+      text-align: right;
+      padding: 0.5rem 1rem;
+    }
+    .menu-icon {
+      cursor: pointer;
+      font-size: 24px;
+    }
+    .menu-items {
+      display: none;
+      flex-direction: column;
+      background-color: #333;
+      padding: 10px;
+    }
+    .menu-items.show {
+      display: flex;
+    }
+    .product {
+      background: #222;
+      margin: 1rem;
+      padding: 1rem;
+      border-radius: 10px;
+    }
+    .product h3 {
+      margin: 0;
+      color: #0f0;
+    }
+    .product p {
+      margin: 5px 0;
+    }
+    .order-btn {
+      background: #0f0;
+      color: #000;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .flag {
+      width: 24px;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+  </style>
+
+<style>
+  .typing {
+    font-size: 24px;
+    font-weight: bold;
+    color: #0ff;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 3px solid #0ff;
+    width: 0;
+    animation: typing 3s steps(12, end) forwards, blink 0.75s step-end infinite;
+    display: inline-block;
+  }
+
+  @keyframes typing {
+    from { width: 0 }
+    to { width: 12ch }
+  }
+
+  @keyframes blink {
+    50% { border-color: transparent }
+  }
+</style>
+
+<style>
+  .product {
+    display: block;
+    padding: 16px;
+    margin: 10px auto;
+    background-color: #222;
+    color: #0ff;
+    border: 2px solid #0ff;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 18px;
+    max-width: 400px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+  .product:hover {
+    background-color: #333;
+    transform: scale(1.02);
+  }
+  .product a.order-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #0f0;
+    color: #000;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+  }
+</style>
+
+<style>
+  body.light {
+    background-color: #ffffff;
+    color: #111111;
+  }
+  body.dark {
+    background-color: #111111;
+    color: #ffffff;
+  }
+  .product {
+    display: block;
+    padding: 16px;
+    margin: 10px auto;
+    background-color: #f0f0f0;
+    color: #000;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 18px;
+    max-width: 400px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+  body.dark .product {
+    background-color: #222;
+    color: #fff;
+    border: 1px solid #555;
+  }
+  .product:hover {
+    background-color: #e8e8e8;
+    transform: scale(1.02);
+  }
+  body.dark .product:hover {
+    background-color: #333;
+  }
+  .product a.order-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #999;
+    color: #fff;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+  }
+</style>
+
+<style>
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 220px;
+    height: 100vh;
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 20px 10px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    z-index: 100;
+  }
+  .sidebar h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .sidebar button {
+    width: 100%;
+    padding: 10px 15px;
+    margin: 5px 0;
+    background-color: #ddd;
+    border: none;
+    border-radius: 6px;
+    text-align: left;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .sidebar button:hover {
+    background-color: #ccc;
+  }
+  .main-content {
+    margin-left: 240px;
+    padding: 20px;
+  }
+  body.dark .sidebar {
+    background-color: #222;
+    color: #fff;
+  }
+  body.dark .sidebar button {
+    background-color: #333;
+    color: #fff;
+  }
+  body.dark .sidebar button:hover {
+    background-color: #444;
+  }
+</style>
+
+
+
+<style>
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  .sidebar.show {
+    transform: translateX(0);
+  }
+
+  /* Responsif agar konten produk tetap besar di HP */
+  @media (max-width: 768px) {
+    .main-content {
+      margin-left: 0 !important;
+      padding: 20px 10px;
+    }
+    .product {
+      width: 100%;
+      max-width: 100%;
+      font-size: 16px;
+    }
+  }
+</style>
+
+<style>
+  #menu-toggle.active::before {
+    content: "✖";
+  }
+  #menu-toggle::before {
+    content: "☰";
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const toggle = document.getElementById("menu-toggle");
+    const sidebar = document.querySelector(".sidebar");
+    toggle.addEventListener("click", () => {
+      sidebar.classList.toggle("show");
+      toggle.classList.toggle("active");
+    });
+  });
+</script>
+
+<style>
+  body {
+    color: #000000 !important;
+  }
+  .product {
+    color: #000000;
+  }
+  .product a.order-btn {
+    background-color: #4db8ff !important;
+    color: #ffffff !important;
+  }
+  .product a.order-btn:hover {
+    background-color: #3399ff !important;
+  }
+</style>
+
+<style>
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 220px;
+    height: 100vh;
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 20px 10px;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  .sidebar.show {
+    transform: translateX(0);
+  }
+  .main-content {
+    margin-left: 0 !important;
+    padding: 20px;
+  }
+  #menu-toggle {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1100;
+    cursor: pointer;
+    font-size: 24px;
+    background: #fff;
+    border-radius: 6px;
+    padding: 4px 8px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+  }
+  #menu-toggle.active::before {
+    content: "✖";
+  }
+  #menu-toggle::before {
+    content: "☰";
+  }
+  @media (max-width: 768px) {
+    .product {
+      width: 100%;
+      max-width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+<div id="menu-toggle" style="position: fixed; top: 15px; left: 15px; z-index: 200; cursor: pointer; font-size: 24px;">☰</div>
+
+<div class="main-content"><div class="sidebar">
+<h2>Dinns Store</h2>
+<button onclick="showSlide(0)">🏠 Beranda</button>
+<button onclick="showSlide(1)">🖥 Vps Premium</button>
+<button onclick="showSlide(2)">🔐 VPN Premium</button>
+<button onclick="showSlide(3)">📱 Suntik Sosmed</button>
+<button onclick="showSlide(4)">⚙️ Config Gratisan</button>
+<button onclick="showSlide(5)">⭐ Aplikasi Premium</button>
+</div>
+
+<nav><button onclick="showSlide(0)">Beranda</button><button onclick="showSlide(0)">Vps</button><button onclick="showSlide(1)">VPN</button><button onclick="showSlide(2)">Sosmed</button><button onclick="showSlide(3)">Config</button><button onclick="showSlide(4)">Apps</button><button onclick="showSlide(5)">Apps</button></nav><div class="slides"><div class="slide" id="slide-0" style="display: block;">
+<section id="welcome">
+<h2>Selamat Datang Di Dinns Store 👋</h2>
+<p>Silakan pilih layanan yang ingin kamu lihat dari menu di atas.</p>
+</section>
+</div><div class="slide" id="slide-0" style="display: none;"><section id="vps">
+<div class="product">
+<h3>Vps Premium RAM 1</h3>
+<p>Harga: Rp25.000/bulan</p>
+<a class="order-btn" href="https://wa.me/6282314477001?text=Assalamualaikum mas, saya mau beli VPS Premium RAM 1, apakah stoknya masih?">Order</a>
+</div>
+
+<div class="product">
+<h3>Vps Premium RAM 2</h3>
+<p>Cocok untuk tugas menengah.</p>
+<a class="order-btn" href="https://wa.me/6282314477001?text=Assalamualaikum mas, saya mau beli VPS Premium RAM 2, apakah stoknya masih?">Order</a>
+</div>
+<div class="product">
+<h3>Vps Premium RAM 3</h3>
+<p>Cocok untuk tugas menengah.</p>
+<a class="order-btn" href="https://wa.me/6282314477001?text=Assalamualaikum mas, saya mau beli VPS Premium RAM 3, apakah stoknya masih?">Order</a>
+</div>
+<div class="product">
+<h3>Vps Premium RAM 4</h3>
+<p>Cocok untuk tugas menengah.</p>
+<a class="order-btn" href="https://wa.me/6282314477001?text=Assalamualaikum mas, saya mau beli VPS Premium RAM 4, apakah stoknya masih?">Order</a>
+</div>
+<div class="product">
+<h3>Vps Premium RAM 5</h3>
+<p>Cocok untuk tugas berat.</p>
+<a class="order-btn" href="https://wa.me/6282314477001?text=Assalamualaikum mas, saya mau beli VPS Premium RAM 5, apakah stoknya masih?">Order</a>
+</div>
+<div class="product">
+<h3>Vps Premium RAM 6</h3>
+<p>Cocok untuk tugas berat.</p>
+<a class="order-btn" href="https://wa.me/6282314477001?text=Assalamualaikum mas, saya mau beli VPS Premium RAM 6, apakah stoknya masih?">Order</a>
+</div>
+<div class="product">
+<h3>Vps Premium RAM 7</h3>
+<p>Cocok untuk tugas berat.</p>
+<a class="order-btn" href="https://wa.me/6282314477001?text=Assalamualaikum mas, saya mau beli VPS Premium RAM 7, apakah stoknya masih?">Order</a>
+</div>
+<div class="product">
+<h3>Vps Premium RAM 8</h3>
+<p>Cocok untuk tugas berat.</p>
+<a class="order-btn" href="https://wa.me/6282314477001?text=Assalamualaikum mas, saya mau beli VPS Premium RAM 8, apakah stoknya masih?">Order</a>
+</div>
+</section><div style="text-align:center; padding:10px; font-size:14px; color:#888;">Copyright ©2025 - Dinns Store</div></div><div class="slide" id="slide-1" style="display: none;"><section id="vpn">
+<div class="product">
+<h3><img class="flag" src="https://flagcdn.com/sg.svg"/>VPN Premium SG - 1 Bulan</h3>
+<p>Harga: Rp10.000</p>
+<p>KELEBIHAN PREMIUM:</p>
+<ul>
+<li>Ping &amp; Koneksi Stabil</li>
+<li>Lancar Download</li>
+<li>Lancar YouTube</li>
+<li>Support VC &amp; GAME</li>
+</ul>
+<a class="order-btn" href="https://wa.me/6282314477001?text=Assalamualaikum mas, saya mau beli VPN Premium SG - 1 Bulan, apakah stoknya masih?">Order</a>
+</div>
+
+<div class="product">
+<h3>VPN Singapore 2 Bulan 🇸🇬</h3>
+<p>Harga: Rp20000</p>
+<p>KELEBIHAN PREMIUM:<br/>• Ping &amp; Koneksi Stabil<br/>• Lancar Download<br/>• Lancar YouTube<br/>• Support VC &amp; GAME</p>
+<a class="order-btn" href="https://wa.me/6282314477001?text=Assalamualaikum mas, saya mau beli VPN Singapore 2 Bulan, apakah stoknya masih?">Order</a>
+</div>
+<div class="product">
+<h3>VPN Singapore 3 Bulan 🇸🇬</h3>
+<p>Harga: Rp30000</p>
+<p>KELEBIHAN PREMIUM:<br/>• Ping &amp; Koneksi Stabil<br/>• Lancar Download<br/>• Lancar YouTube<br/>• Support VC &amp; GAME</p>
+<a class="order-btn" href="https://wa.me/6282314477001?text=Assalamualaikum mas, saya mau beli VPN Singapore 3 Bulan, apakah stoknya masih?">Order</a>
+</div>
+<div class="product">
+<h3>VPN Singapore 4 Bulan 🇸🇬</h3>
+<p>Harga: Rp40000</p>
+<p>KELEBIHAN PREMIUM:<br/>• Ping &amp; Koneksi Stabil<br/>• Lancar Download<br/>• Lancar YouTube<br/>• Support VC &amp; GAME</p>
+<a class="order-btn" href="https://wa.me/6282314477001?text=Assalamualaikum mas, saya mau beli VPN Singapore 4 Bulan, apakah stoknya masih?">Order</a>
+</div>
+<div class="product">
+<h3>VPN Indonesia 2 Bulan 🇮🇩</h3>
+<p>Harga: Rp26000</p>
+<p>KELEBIHAN PREMIUM:<br/>• Ping &amp; Koneksi Stabil<br/>• Lancar Download<br/>• Lancar YouTube<br/>• Support VC &amp; GAME</p>
+<a class="order-btn" href="https://wa.me/6282314477001?text=Assalamualaikum mas, saya mau beli VPN Indonesia 2 Bulan, apakah stoknya masih?">Order</a>
+</div>
+<div class="product">
+<h3>VPN Indonesia 3 Bulan 🇮🇩</h3>
+<p>Harga: Rp39000</p>
+<p>KELEBIHAN PREMIUM:<br/>• Ping &amp; Koneksi Stabil<br/>• Lancar Download<br/>• Lancar YouTube<br/>• Support VC &amp; GAME</p>
+<a class="order-btn" href="https://wa.me/6282314477001?text=Assalamualaikum mas, saya mau beli VPN Indonesia 3 Bulan, apakah stoknya masih?">Order</a>
+</div>
+<div class="product">
+<h3>VPN Indonesia 4 Bulan 🇮🇩</h3>
+<p>Harga: Rp52000</p>
+<p>KELEBIHAN PREMIUM:<br/>• Ping &amp; Koneksi Stabil<br/>• Lancar Download<br/>• Lancar YouTube<br/>• Support VC &amp; GAME</p>
+<a class="order-btn" href="https://wa.me/6282314477001?text=Assalamualaikum mas, saya mau beli VPN Indonesia 4 Bulan, apakah stoknya masih?">Order</a>
+</div>
+</section><div style="text-align:center; padding:10px; font-size:14px; color:#888;">Copyright ©2025 - Dinns Store</div></div><div class="slide" id="slide-2" style="display: none;"><section id="sosmed">
+<div class="product">
+<h3>Followers Tiktok (100) - Rp5.000</h3>
+<p>Followers aktif dan cepat masuk.</p>
+<a class="order-btn" href="https://wa.me/6282314477001?text=Assalamualaikum mas, saya mau beli Followers TikTok 100, apakah stoknya masih?">Order</a>
+</div>
+
+<div class="product">
+<h3>Tiktok Views</h3>
+<p>Rp3.000 per 1000 views</p>
+<a class="order-btn" href="https://wa.me/6282314477001?text=Assalamualaikum mas, saya mau beli TikTok Views 1000, apakah stoknya masih?">Order</a>
+</div>
+<div class="product">
+<h3>Tiktok Likes</h3>
+<p>Rp4.000 per 100 likes</p>
+<a class="order-btn" href="https://wa.me/6282314477001?text=Assalamualaikum mas, saya mau beli TikTok Likes 100, apakah stoknya masih?">Order</a>
+</div>
+<div class="product">
+<h3>Instagram Followers</h3>
+<p>Rp5.000/100 sampai Rp50.000/1000</p>
+<a class="order-btn" href="https://wa.me/6282314477001?text=Assalamualaikum mas, saya mau beli Instagram Followers 100, apakah stoknya masih?">Order</a>
+</div>
+<div class="product">
+<h3>Instagram Likes</h3>
+<p>Rp4.000 per 100 likes</p>
+<a class="order-btn" href="https://wa.me/6282314477001?text=Assalamualaikum mas, saya mau beli Instagram Likes 100, apakah stoknya masih?">Order</a>
+</div>
+</section><div style="text-align:center; padding:10px; font-size:14px; color:#888;">Copyright ©2025 - Dinns Store</div></div><div class="slide" id="slide-3" style="display: none;"><section id="config">
+<div class="product">
+<h3>Config Axis Game</h3>
+<p>Download config gratisan khusus Axis Game.</p>
+<a class="order-btn" href="https://example.com/config/axis-game.ehi" target="_blank">Download (gratis)</a>
+</div>
+</section><div style="text-align:center; padding:10px; font-size:14px; color:#888;">Copyright ©2025 - Dinns Store</div></div><div class="slide" id="slide-4" style="display: none;"><section id="apps">
+<h2>Aplikasi Premium</h2>
+<div class="product">
+<h3>Youtube Premium</h3>
+<p>Tanpa iklan, bisa putar di latar belakang, dan download video offline.</p>
+<a class="order-btn" href="https://wa.me/6282314477001?text=Assalamualaikum mas, saya mau beli YouTube Premium, apakah stoknya masih?">Order</a>
+</div>
+<div class="product">
+<h3>Canva Pro</h3>
+<p>Akses fitur desain premium tanpa watermark dan ribuan elemen eksklusif.</p>
+<a class="order-btn" href="https://wa.me/6282314477001?text=Assalamualaikum mas, saya mau beli Canva Pro, apakah stoknya masih?">Order</a>
+</div>
+<div class="product">
+<h3>Spotify Premium</h3>
+<p>Dengarkan musik tanpa iklan, bisa offline, dan bebas skip lagu.</p>
+<a class="order-btn" href="https://wa.me/6282314477001?text=Assalamualaikum mas, saya mau beli Spotify Premium, apakah stoknya masih?">Order</a>
+</div>
+<div class="product">
+<h3>Netflix Premium</h3>
+<p>Akses semua film dan serial tanpa batasan kualitas dan perangkat.</p>
+<a class="order-btn" href="https://wa.me/6282314477001?text=Assalamualaikum mas, saya mau beli Netflix Premium, apakah stoknya masih?">Order</a>
+</div>
+</section><div style="text-align:center; padding:10px; font-size:14px; color:#888;">Copyright ©2025 - Dinns Store</div></div><div class="slide" id="slide-5" style="display: none;"><section id="apps">
+<h2>Aplikasi Premium</h2>
+<div class="product">
+<h3>Youtube Premium</h3>
+<p>Tonton video tanpa iklan, bisa putar di latar belakang, dan unduh offline.</p>
+<a class="order-btn" href="https://wa.me/6282314477001?text=Assalamualaikum mas, saya mau beli YouTube Premium, apakah stoknya masih?">Order</a>
+</div>
+<div class="product">
+<h3>Canva Pro</h3>
+<p>Buat desain tanpa watermark dengan akses ke ribuan elemen premium.</p>
+<a class="order-btn" href="https://wa.me/6282314477001?text=Assalamualaikum mas, saya mau beli Canva Pro, apakah stoknya masih?">Order</a>
+</div>
+<div class="product">
+<h3>Spotify Premium</h3>
+<p>Streaming musik tanpa iklan, bebas skip lagu, dan bisa offline.</p>
+<a class="order-btn" href="https://wa.me/6282314477001?text=Assalamualaikum mas, saya mau beli Spotify Premium, apakah stoknya masih?">Order</a>
+</div>
+<div class="product">
+<h3>Netflix Premium</h3>
+<p>Akses semua film dan serial dengan kualitas tinggi dan tanpa batasan perangkat.</p>
+<a class="order-btn" href="https://wa.me/6282314477001?text=Assalamualaikum mas, saya mau beli Netflix Premium, apakah stoknya masih?">Order</a>
+</div>
+</section><div style="text-align:center; padding:10px; font-size:14px; color:#888;">Copyright ©2025 - Dinns Store</div></div></div><header>Dinns Store</header>
+<nav>
+<div class="menu-icon" onclick="toggleMenu()">☰</div>
+<div class="menu-items" id="menuItems">
+<a href="#vps">VPS Premium</a>
+<a href="#vpn">VPN Premium</a>
+<a href="#sosmed">Suntik Sosmed</a>
+<a href="#config">Config Gratisan</a>
+</div>
+</nav>
+
+
+
+
+<script>
+    function toggleMenu() {
+      const menu = document.getElementById("menuItems");
+      menu.classList.toggle("show");
+    }
+  </script>
+
+
+
+
+
+<script>
+  function showSlide(index) {
+    const slides = document.querySelectorAll('.slide');
+    slides.forEach((s, i) => {
+      s.style.display = (i === index) ? 'block' : 'none';
+    });
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+</script>
+</div></body>
+</html>
