@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dinns Store</title>
+  <style>
+    body { margin: 0; font-family: sans-serif; transition: background 0.3s, color 0.3s; }
+    body.dark { background: #111; color: #fff; }
+    body.light { background: #fff; color: #000; }
+    .sidebar {
+      position: fixed; top: 0; left: 0; width: 220px; height: 100%;
+      background: #f0f0f0; color: #000; transform: translateX(-100%);
+      transition: transform 0.3s ease; z-index: 1000; padding: 20px;
+    }
+    .sidebar.show { transform: translateX(0); }
+    .product {
+      background: #f9f9f9; border: 1px solid #ccc; border-radius: 8px;
+      padding: 15px; margin: 15px; max-width: 400px;
+    }
+    body.dark .product { background: #222; border-color: #444; color: #fff; }
+    .order-btn {
+      background: #4db8ff; color: #fff; padding: 10px 20px;
+      display: inline-block; text-decoration: none; border-radius: 6px;
+    }
+    #menu-toggle, #mode-toggle {
+      position: fixed; top: 15px; z-index: 1100; font-size: 24px;
+      background: #fff; padding: 6px 10px; border-radius: 6px; cursor: pointer;
+      box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    }
+    #menu-toggle { left: 15px; }
+    #mode-toggle { right: 15px; }
+  </style>
+</head>
+<body class="light">
+  <div id="menu-toggle">☰</div>
+  <div id="mode-toggle">🌙</div>
+  <div class="sidebar">
+    <h2>DINNS STORE</h2>
+    <button onclick="showSlide(0)">🏠 Beranda</button>
+    <button onclick="showSlide(1)">🖥 VPS Premium</button>
+  </div>
+  <div class="main-content">
+    <div class="slide" id="slide-0" style="display: block;">
+      <h2>Selamat Datang di Dinns Store 👋</h2>
+      <p>Silakan pilih layanan dari menu ☰ di kiri atas.</p>
+    </div>
+    <div class="slide" id="slide-1" style="display: none;">
+      <div class="product">
+        <h3>VPS Premium RAM 1</h3>
+        <p>Cocok untuk tugas ringan.</p>
+        <a class="order-btn" href="https://wa.me/6282314477001?text=Assalamualaikum mas, saya mau beli VPS Premium RAM 1, apakah stoknya masih?">Order</a>
+      </div>
+    </div>
+  </div>
+  <script>
+    const toggle = document.getElementById("menu-toggle");
+    const sidebar = document.querySelector(".sidebar");
+    toggle.onclick = () => {
+      sidebar.classList.toggle("show");
+      toggle.textContent = sidebar.classList.contains("show") ? "✖" : "☰";
+    };
+
+    const modeToggle = document.getElementById("mode-toggle");
+    const body = document.body;
+    const saved = localStorage.getItem("theme");
+    if (saved === "dark") {
+      body.classList.add("dark");
+      modeToggle.textContent = "☀️";
+    }
+    modeToggle.onclick = () => {
+      body.classList.toggle("dark");
+      const isDark = body.classList.contains("dark");
+      localStorage.setItem("theme", isDark ? "dark" : "light");
+      modeToggle.textContent = isDark ? "☀️" : "🌙";
+    };
+
+    function showSlide(index) {
+      document.querySelectorAll('.slide').forEach((s, i) => {
+        s.style.display = (i === index) ? 'block' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>
